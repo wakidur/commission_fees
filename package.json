@@ -1,0 +1,19 @@
+{
+  "name": "commission_fees",
+  "version": "1.0.0",
+  "description": "calculated commission fees for each operation",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./app",
+    "devstart": "nodemon ./app"
+  },
+  "author": "Wakidur Rahman",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  },
+  "engines": {
+    "node": ">=10.16.0",
+    "npm": ">=6.9.0"
+  }
+}
