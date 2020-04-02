@@ -1,2 +1,5 @@
-# commission_fees-
-User transactions  commission fee
+# FommissionFees
+User transactions commission fee
+npm install
+node app.js
+
