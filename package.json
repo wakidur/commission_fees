@@ -4,8 +4,8 @@
   "description": "calculated commission fees for each operation",
   "main": "app.js",
   "scripts": {
-    "start": "node ./app",
-    "devstart": "nodemon ./app"
+    "start": "node app",
+    "devstart": "nodemon app"
   },
   "author": "Wakidur Rahman",
   "license": "ISC",

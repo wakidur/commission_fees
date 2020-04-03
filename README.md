@@ -1,8 +1,19 @@
 # Commission Fees
-User transactions commission fee
+> User transactions commission fee calculation.
 
- ### npm install
- ### node app.js
+## Install Dependencies
+```
+npm install
+```
 
+## Run App
+
+```
+# Run in dev mode
+nodemon
+
+# Run in prod mode
+npm start
+```
 
 
