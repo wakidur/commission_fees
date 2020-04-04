@@ -83,11 +83,11 @@ async function calculatedCommissionFees(inputFile) {
             }
         }
 
-       // Retrieve user weekly  commission fees
+       // Retrieve user weekly commission fees
         weeklyCashOutNaturalPersonsGroup.forEach(item => {
             item.forEach(nested => {
                 console.log(service.particularCashOutNaturalPersons(nested, cashOutNatural));
-                // return particularCashOutNaturalPersons(nested, cashOutNatural);
+                return service.particularCashOutNaturalPersons(nested, cashOutNatural);
             });
         })
 

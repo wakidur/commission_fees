@@ -8,8 +8,6 @@ module.exports = {
     particularCashOutJuridicalPersons,
     weekWiseGrouping, 
     particularCashOutNaturalPersons
-
-
 };
 
 const DaysOfWeek = {
@@ -76,12 +74,11 @@ function particularCashOutJuridicalPersons(item, cashOutJuridical) {
 
 }
 
-
-
 // Cash Out Natural Persons commintion fee calculating 
 function particularCashOutNaturalPersons(weeklyOperation, cashoutnatural) {
     let commission = 0.00;
     totalAmountPerWeek = 0;
+    // Add per week total  
     if (weeklyOperation.transactions.length > 0) {
         weeklyOperation.transactions.forEach(item => {
             if (item.operation && item.operation.currency === "EUR") {
@@ -96,7 +93,7 @@ function particularCashOutNaturalPersons(weeklyOperation, cashoutnatural) {
         let amount = parseFloat(perWeek);
         let percents = parseFloat(cashoutnatural.percents)
         commission = roundUp(((amount / 100) * percents), 2).toFixed(2);
-    } else if(parseInt(totalAmountPerWeek)  <= parseInt(cashoutnatural.week_limit.amount)) {
+    } else if(parseInt(totalAmountPerWeek) <= parseInt(cashoutnatural.week_limit.amount)) {
         // for 1000.00 EUR there is still no commission fee
         commission = "0.00" ;
     }
@@ -159,7 +156,6 @@ function roundUp(num, precision) {
 
 function getPreceedingDayDate(date, dayOfWeek) {
     const day = date.getDay()
-
     let dayToMinus = 0
     if (dayOfWeek < day) {
         dayToMinus = day - dayOfWeek
@@ -174,7 +170,6 @@ function getPreceedingDayDate(date, dayOfWeek) {
 
 function getNextDayDate(date, dayOfWeek) {
     const day = date.getDay()
-
     let dayToAdd = 0
 
     if (day < dayOfWeek) {

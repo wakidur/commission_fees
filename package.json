@@ -10,6 +10,7 @@
   "author": "Wakidur Rahman",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^6.8.0",
     "nodemon": "^1.19.1"
   },
   "engines": {
