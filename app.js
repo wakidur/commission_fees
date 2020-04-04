@@ -26,7 +26,7 @@ calculatedCommissionFees(input);
 // As a single argument program must accept a path to the input file
 async function calculatedCommissionFees(inputFile) {
     try {
-      // Weekly Cash out Natural Persons Group array init 
+        // Weekly Cash out Natural Persons Group array init 
         let weeklyCashOutNaturalPersonsGroup = [];
         // Http request for Config Cash In
         let configCashIn = await service.getConfigurationEndpoint('http://private-38e18c-uzduotis.apiary-mock.com/config/cash-in');
@@ -79,15 +79,21 @@ async function calculatedCommissionFees(inputFile) {
         for (const key in groupByUserId) {
             if (groupByUserId.hasOwnProperty(key)) {
                 const particularUserOperation = groupByUserId[key];
-                weeklyCashOutNaturalPersonsGroup.push(service.weekWiseGrouping(particularUserOperation, DaysOfWeek.mon, DaysOfWeek.sun));                
+                weeklyCashOutNaturalPersonsGroup.push(service.weekWiseGrouping(particularUserOperation, DaysOfWeek.mon, DaysOfWeek.sun));
             }
         }
 
-       // Retrieve user weekly commission fees
+        // Retrieve user weekly commission fees
         weeklyCashOutNaturalPersonsGroup.forEach(item => {
             item.forEach(nested => {
-                console.log(service.particularCashOutNaturalPersons(nested, cashOutNatural));
-                return service.particularCashOutNaturalPersons(nested, cashOutNatural);
+                if (typeof (nested) === 'object' && Object.keys(nested).length && Array.isArray(nested.transactions) && nested.transactions.length === 1) {
+                    console.log(service.singleCashOutNaturalPersons(nested, cashOutNatural));
+                    return service.singleCashOutNaturalPersons(nested, cashOutNatural);
+                } else if (typeof (nested) === 'object' && Object.keys(nested).length && Array.isArray(nested.transactions) && nested.transactions.length > 1) {
+                    let perWeekOperationDescendingOrderByAmount = nested.transactions.sort((a, b) => parseFloat(b.operation.amount) - parseFloat(a.operation.amount));
+                    // console.log(service.particularCashOutNaturalPersons(perWeekOperationDescendingOrderByAmount, cashOutNatural));
+                    return service.particularCashOutNaturalPersons(perWeekOperationDescendingOrderByAmount, cashOutNatural);
+                }
             });
         });
 
@@ -95,6 +101,3 @@ async function calculatedCommissionFees(inputFile) {
         console.error(error);
     }
 }
-
-
-

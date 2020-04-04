@@ -6,8 +6,9 @@ module.exports = {
     getConfigurationEndpoint,
     particularCashInCommition,
     particularCashOutJuridicalPersons,
-    weekWiseGrouping, 
-    particularCashOutNaturalPersons
+    weekWiseGrouping,
+    particularCashOutNaturalPersons,
+    singleCashOutNaturalPersons
 };
 
 const DaysOfWeek = {
@@ -62,7 +63,7 @@ function particularCashOutJuridicalPersons(item, cashOutJuridical) {
         // Not less than 0.50 EUR for operation
         if (parseFloat(item.operation.amount) > parseFloat(cashOutJuridical.min.amount)) {
             //  example 0.023 should return 0.03
-            commission = roundUp(((amount / 100) * percents), 2).toFixed(2);     
+            commission = roundUp(((amount / 100) * percents), 2).toFixed(2);
         } else {
             console.error("Less than 0.50 EUR");
         }
@@ -77,30 +78,59 @@ function particularCashOutJuridicalPersons(item, cashOutJuridical) {
 // Cash Out Natural Persons commintion fee calculating 
 function particularCashOutNaturalPersons(weeklyOperation, cashoutnatural) {
     let commission = 0.00;
+    let commintionFee = [];
     totalAmountPerWeek = 0;
-    // Add per week total  
-    if (weeklyOperation.transactions.length > 0) {
-        weeklyOperation.transactions.forEach(item => {
-            if (item.operation && item.operation.currency === "EUR") {
-                totalAmountPerWeek += item.operation.amount;
+
+    // Check Weekly operation First index limit is greaterthen weekly limit
+    if (weeklyOperation[0].operation.amount > cashoutnatural.week_limit.amount) {
+        weeklyOperation.forEach((item, index) => {
+            if (item.operation && item.operation.currency === cashoutnatural.week_limit.currency) {
+                if (index === 0) {
+                    commission = null;
+                    // If total cash out amount is exceeded - commission is calculated only from exceeded amount
+                    let firstIndexAmount = parseFloat(item.operation.amount) - parseFloat(cashoutnatural.week_limit.amount);
+                    let amount = parseFloat(firstIndexAmount);
+                    let percents = parseFloat(cashoutnatural.percents);
+                    commission = roundUp(((amount / 100) * percents), 2).toFixed(2);
+                    commintionFee.push(commission);
+                    console.log(commission);
+
+                } else {
+                    commission = null;
+                    let amount = parseFloat(item.operation.amount);
+                    let percents = parseFloat(cashoutnatural.percents);
+                    commission = roundUp(((amount / 100) * percents), 2).toFixed(2);
+                    commintionFee.push(commission);
+                    console.log(commission);
+                }
             }
         });
+
     }
-    if (totalAmountPerWeek > cashoutnatural.week_limit.amount) {
-        commission = 0;
+    
+    return commintionFee;
+
+}
+
+// Cash Out Natural Persons commintion fee calculating 
+function singleCashOutNaturalPersons(operation, cashoutnatural) {
+    // commission fee init
+    let commission = 0.00;
+
+    if (parseFloat(operation.transactions[0].operation.amount) > parseFloat(cashoutnatural.week_limit.amount)) {
+        commission = null;
         // If total cash out amount is exceeded - commission is calculated only from exceeded amount
-        let perWeek = parseFloat(totalAmountPerWeek) - parseFloat(cashoutnatural.week_limit.amount);
+        let perWeek = parseFloat(operation.transactions[0].operation.amount) - parseFloat(cashoutnatural.week_limit.amount);
         let amount = parseFloat(perWeek);
         let percents = parseFloat(cashoutnatural.percents);
         commission = roundUp(((amount / 100) * percents), 2).toFixed(2);
-    } else if(parseInt(totalAmountPerWeek) <= parseInt(cashoutnatural.week_limit.amount)) {
+    } else if (parseInt(operation.transactions[0].operation.amount) <= parseInt(cashoutnatural.week_limit.amount)) {
         // for 1000.00 EUR there is still no commission fee
-        commission = "0.00" ;
+        commission = "0.00";
     }
-
     return commission;
-
 }
+
 
 // Will return a array of object.
 // Each object will have startDateOfWeek, endDateOfWeek, transactions
