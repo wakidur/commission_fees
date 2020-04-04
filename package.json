@@ -15,5 +15,10 @@
   "engines": {
     "node": ">=10.16.0",
     "npm": ">=6.9.0"
+  },
+  "dependencies": {
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
+    "save": "^2.4.0"
   }
 }
