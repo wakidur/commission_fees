@@ -1,8 +1,6 @@
 // The fs module provides an API for interacting with the file system
 const fs = require('fs');
 const service = require('./service/service');
-
-
 /**
  * Input data ----------------------
  * Input data is given in JSON file
@@ -18,7 +16,6 @@ const DaysOfWeek = {
     fri: 5,
     sat: 6,
 };
-
 
 // Function Invock 
 calculatedCommissionFees(input);
